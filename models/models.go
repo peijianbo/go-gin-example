@@ -2,10 +2,9 @@ package models
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"log"
 
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"time"
@@ -43,6 +42,8 @@ func Setup() {
 	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+
+	db.AutoMigrate(&Auth{}, &Article{}, &Tag{})
 }
 
 // CloseDB closes database connection (unnecessary)

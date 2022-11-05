@@ -1,9 +1,12 @@
 package routers
 
 import (
-	"net/http"
-
+	"github.com/EDDYCJY/go-gin-example/middleware/error_handler"
+	"github.com/EDDYCJY/go-gin-example/pkg/logging"
+	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
 
 	_ "github.com/EDDYCJY/go-gin-example/docs"
 	"github.com/swaggo/gin-swagger"
@@ -20,9 +23,15 @@ import (
 // InitRouter initialize routing information
 func InitRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
-
+	if setting.ServerSetting.RunMode == "debug" {
+		r.Use(gin.LoggerWithWriter(os.Stdout))
+		r.Use(error_handler.RecoveryWithWriter(os.Stdout))
+		//r.Use(gin.RecoveryWithWriter(os.Stdout))
+	} else {
+		r.Use(gin.LoggerWithWriter(logging.F))
+		//r.Use(error_handler.RecoveryWithWriter(logging.F))
+		r.Use(gin.RecoveryWithWriter(logging.F))
+	}
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
