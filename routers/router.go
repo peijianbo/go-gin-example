@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/EDDYCJY/go-gin-example/middleware/error_handler"
+	"github.com/EDDYCJY/go-gin-example/middleware/panic_handler"
 	"github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/gin-gonic/gin"
@@ -25,11 +25,11 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	if setting.ServerSetting.RunMode == "debug" {
 		r.Use(gin.LoggerWithWriter(os.Stdout))
-		r.Use(error_handler.RecoveryWithWriter(os.Stdout))
+		r.Use(panic_handler.RecoveryWithWriter(os.Stdout))
 		//r.Use(gin.RecoveryWithWriter(os.Stdout))
 	} else {
 		r.Use(gin.LoggerWithWriter(logging.F))
-		//r.Use(error_handler.RecoveryWithWriter(logging.F))
+		//r.Use(panic_handler.RecoveryWithWriter(logging.F))
 		r.Use(gin.RecoveryWithWriter(logging.F))
 	}
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))

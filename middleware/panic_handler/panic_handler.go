@@ -1,4 +1,4 @@
-package error_handler
+package panic_handler
 
 import (
 	"bytes"
@@ -87,7 +87,7 @@ type MyError struct {
 }
 
 // RecoveryWithWriter 业务中可以随意panic，此中间件可以捕获panic，记录日志并返回json数据
-// panic(error_handler.MyError{e.ERROR_AUTH_CHECK_TOKEN_FAIL, "失败了", 401})
+// 举例：panic(panic_handler.MyError{e.ERROR_AUTH_CHECK_TOKEN_FAIL, "失败了", 401})
 func RecoveryWithWriter(out io.Writer) gin.HandlerFunc {
 	logger := log.New(out, "\u001B[31m[Recovery] panic recovered:\n", log.LstdFlags)
 	return func(c *gin.Context) {
